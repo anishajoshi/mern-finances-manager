@@ -32,7 +32,7 @@ router.post("/", async (req, res) => {
     res.send(result).status(204);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error adding record");
+    res.status(500).send("Error adding finance record");
   }
 });
 
@@ -54,7 +54,7 @@ router.patch("/:id", async (req, res) => {
     res.send(result).status(200);
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error updating record");
+    res.status(500).send("Error updating finance record");
   }
 });
 

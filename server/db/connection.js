@@ -21,6 +21,6 @@ try {
   console.error(err);
 }
 
-let db = client.db("tasks");
+let db = client.db("expenses");
 
 export default db;
