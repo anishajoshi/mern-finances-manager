@@ -20,14 +20,19 @@ const Record = (props) => (
     <td className="p-4 align-middle [&amp;:has([role=checkbox])]:pr-0">
       <div className="flex gap-2">
         <Link
-          className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 h-9 rounded-md px-3"
+          className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background 
+          transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
+          disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-blue-100 h-9 rounded-md px-5
+          shadow-md border-blue-500"
           to={`/edit/${props.record._id}`}
         >
           Edit
         </Link>
         <button
-          className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 hover:text-accent-foreground h-9 rounded-md px-3"
-          color="red"
+          className="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium ring-offset-background 
+          transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 
+          disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-red-100 hover:text-accent-foreground
+          h-9 rounded-md px-3 shadow-md border-red-500"
           type="button"
           onClick={() => {
             props.deleteRecord(props.record._id);
@@ -85,9 +90,9 @@ export default function RecordList() {
   return (
     <>
       <h3 className="text-lg font-semibold p-4">All Your Expenses!</h3>
-        <div className="border rounded-lg overflow-hidden">
+        <div className="border rounded-lg overflow-hidden shadow-lg border-purple-600">
           <div className="relative w-full overflow-auto">
-            <table className="w-full caption-bottom text-sm">
+            <table className="w-full caption-bottom text-md">
               <thead className="[&amp;_tr]:border-b">
                 <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
                   <th className="h-12 px-4 text-left align-middle font-medium text-muted-foreground [&amp;:has([role=checkbox])]:pr-0">

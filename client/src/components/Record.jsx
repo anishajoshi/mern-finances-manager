@@ -54,9 +54,6 @@ export default function Record() {
     if (!form.cost.trim()) {
       errors.cost = "Cost field is required";
     }
-    if (!form.type.trim()) {
-      errors.type = "Type field is required";
-    }
     if (!form.date.trim()) {
       errors.date = "Date field is required";
     }
@@ -116,30 +113,30 @@ export default function Record() {
       <h3 className="text-lg font-semibold p-4">Add or Update your Expenses here!</h3>
       <form
         onSubmit={onSubmit}
-        className="border rounded-lg overflow-hidden p-4"
+        className="border rounded-lg overflow-hidden p-4 shadow-lg ring-2 ring-purple-500 ring-opacity-100"
       >
         {/* Error messages */}
         {errors.name && <p className="text-red-500">{errors.name}</p>}
         {errors.cost && <p className="text-red-500">{errors.cost}</p>}
         {errors.type && <p className="text-red-500">{errors.type}</p>}
         {errors.date && <p className="text-red-500">{errors.date}</p>}
-        <div className="grid grid-cols-1 gap-x-8 gap-y-10 border-b border-slate-900/10 pb-12 md:grid-cols-2">
+        <div>
           <div className="grid max-w-2xl grid-cols-1 gap-x-6 gap-y-8 ">
-            {/*Expense nmae part of the Form starts here*/}
+            {/*Expense name part of the Form starts here*/}
             <div className="sm:col-span-4">
               <label
                 htmlFor="name"
-                className="block text-sm font-medium leading-6 text-slate-900"
+                className="block text-md font-medium leading-6"
               >
                 Expense Name
               </label>
               <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 sm:max-w-md">
                   <input
                     type="text"
                     name="name"
                     id="name"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-slate-900 placeholder:text-slate-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-slate-900 placeholder-slate focus:ring-0 sm:text-sm sm:leading-6"
                     placeholder="eg. Iced Matcha"
                     value={form.name}
                     onChange={(e) => updateForm({ name: e.target.value })}
@@ -151,12 +148,12 @@ export default function Record() {
             <div className="sm:col-span-4">
               <label
                 htmlFor="cost"
-                className="block text-sm font-medium leading-6 text-slate-900"
+                className="block text-md font-medium leading-6 text-slate-900"
               >
                 Cost
               </label>
               <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 sm:max-w-md">
                   <input
                     type="number" //type is number here ; need to cross check if this works
                     name="cost"
@@ -174,12 +171,12 @@ export default function Record() {
             <div className="sm:col-span-4">
               <label
                 htmlFor="type"
-                className="block text-sm font-medium leading-6 text-slate-900"
+                className="block text-md font-medium leading-6 text-slate-900"
               >
                 Type
               </label>
               <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-slate-300 sm:max-w-md">
                   <select
                     id="type"
                     name="type"
@@ -190,7 +187,11 @@ export default function Record() {
                     <option value="Food">Food</option>
                     <option value="Transportation">Transportation</option>
                     <option value="Housing">Housing</option>
-                    <option value="Entertainment">Entertainment</option>
+                    <option value="Entertainment">Clothing</option>
+                    <option value="Recreation">Recreation</option>
+                    <option value="Health">Health</option>
+                    <option value="Education">Education</option>
+                    <option value="Miscallaneous">Miscallaneous</option>
                   </select>
                 </div>
               </div>
@@ -198,7 +199,7 @@ export default function Record() {
             <div className="sm:col-span-4">
               <label
                 htmlFor="date"
-                className="block text-sm font-medium leading-6 text-slate-900"
+                className="block text-md font-medium leading-6 text-slate-900"
               >
                 Date
               </label>
@@ -221,7 +222,10 @@ export default function Record() {
         <input
           type="submit"
           value="Save Expense Record"
-          className="inline-flex items-center justify-center whitespace-nowrap text-md font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 border border-input bg-background hover:bg-slate-100 hover:text-accent-foreground h-9 rounded-md px-3 cursor-pointer mt-4"
+          className="inline-flex items-center justify-center whitespace-nowrap text-md font-medium ring-offset-background transition-colors 
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none 
+          disabled:opacity-50 border border-input bg-background hover:bg-blue-100 hover:text-accent-foreground h-9 rounded-md px-3 cursor-pointer mt-4
+          ring-2 ring-blue-500 ring-opacity-50 shadow-md"
         />
       </form>
     </>
