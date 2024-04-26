@@ -1,4 +1,4 @@
-//client/src/components/main.jsx
+// client/src/components/main.jsx
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import {
@@ -8,6 +8,7 @@ import {
 import App from "./App";
 import Record from "./components/Record";
 import RecordList from "./components/RecordList";
+import Report from "./components/Report"; // Import the Report component
 import "./index.css";
 
 const router = createBrowserRouter([
@@ -38,6 +39,16 @@ const router = createBrowserRouter([
       {
         path: "/create",
         element: <Record />,
+      },
+    ],
+  },
+  {
+    path: "/report", // Add a new route for the report page
+    element: <App />,
+    children: [
+      {
+        path: "/report",
+        element: <Report />,
       },
     ],
   },

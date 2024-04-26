@@ -61,7 +61,7 @@ export default function Record() {
     return Object.keys(errors).length === 0;
   }
 
-  // Handling the submission
+  // Handling the submission - this is what gets executed when submit button is pressed
   async function onSubmit(e) {
     e.preventDefault();
     if (!validateForm()) {
