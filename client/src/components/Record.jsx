@@ -16,7 +16,7 @@ export default function Record() {
   useEffect(() => {
     async function fetchData() {
       const id = params.id?.toString() || undefined;
-      if(!id) return;
+      if (!id) return;
       setIsNew(false);
       const response = await fetch(
         `http://localhost:5050/record/${params.id.toString()}`
@@ -35,7 +35,6 @@ export default function Record() {
       setForm(record);
     }
     fetchData();
-    return;
   }, [params.id, navigate]);
 
   // These methods will update the state properties.
@@ -45,7 +44,9 @@ export default function Record() {
     });
   }
 
-  // Making sure that fields aren't left empty
+  // Making sure that fields aren't left empty and perform input validation
+  // Validation for the name, cost, and date fields is performed here.
+
   function validateForm() {
     const errors = {};
     if (!form.name.trim()) {
@@ -53,6 +54,8 @@ export default function Record() {
     }
     if (!form.cost.trim()) {
       errors.cost = "Cost field is required";
+    } else if (parseFloat(form.cost) < 0) {
+      errors.cost = "Cost cannot be negative";
     }
     if (!form.date.trim()) {
       errors.date = "Date field is required";
@@ -61,9 +64,22 @@ export default function Record() {
     return Object.keys(errors).length === 0;
   }
 
+  // Sanitize form input to remove trailing whitespaces
+  // Trailing whitespaces are removed from the input fields of the form.
+  function sanitizeFormInput() {
+    const sanitizedForm = {};
+    for (const key in form) {
+      sanitizedForm[key] = form[key].trim();
+    }
+    setForm(sanitizedForm);
+  }
+
   // Handling the submission - this is what gets executed when submit button is pressed
+  // Form input is sanitized and validated before submission.
+  
   async function onSubmit(e) {
     e.preventDefault();
+    sanitizeFormInput(); // Sanitize form input before validation
     if (!validateForm()) {
       return; // Don't submit if there are validation errors
     }
@@ -101,9 +117,6 @@ export default function Record() {
       console.error('A problem occurred with your fetch operation: ', error);
       // Provide error feedback to the user
       alert("An error occurred while saving the expense record. Please try again.");
-    } finally {
-      setForm({ name: "", cost: "", type: "", date: "" });
-      navigate("/");
     }
   }
 

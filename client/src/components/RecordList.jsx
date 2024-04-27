@@ -74,14 +74,20 @@ export default function RecordList() {
       filtered = filtered.filter((record) => record.type === filterType);
     }
 
-    if (minAmount) {
+    /* 
+    Integrated input sanitizations for minAmount and maxAmount inputs in the applyFilters function. 
+    It checks if the inputs are not empty and if they are valid numbers before applying the filter.
+    By using a calendar input directly, it automatically also sanitizes input.  
+    */
+
+    if (minAmount !== "" && !isNaN(minAmount)) { // Validate minAmount
       filtered = filtered.filter((record) => record.cost >= parseFloat(minAmount));
     }
-    
-    if (maxAmount) {
-      filtered = filtered.filter((record) => record.cost <= parseFloat(maxAmount));
-    }    
 
+    if (maxAmount !== "" && !isNaN(maxAmount)) { // Validate maxAmount
+      filtered = filtered.filter((record) => record.cost <= parseFloat(maxAmount));
+    }  
+  
     if (startDate) {
       filtered = filtered.filter(
         (record) => new Date(record.date) >= new Date(startDate)
@@ -107,6 +113,7 @@ export default function RecordList() {
   }
 
   function recordList() {
+
     return filteredRecords.map((record) => {
       return (
         <Record

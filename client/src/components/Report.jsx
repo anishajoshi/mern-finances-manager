@@ -16,6 +16,15 @@ const Report = () => {
         }
         const records = await response.json();
         setRecords(records);
+        // Calculate earliest and latest purchase dates
+        const dates = records.map(record => new Date(record.date));
+        const earliestDate = new Date(Math.min(...dates)).toISOString().split("T")[0];
+        const latestDate = new Date(Math.max(...dates)).toISOString().split("T")[0];
+        
+        // Set start and end dates to earliest and latest dates
+        setStartDate(earliestDate);
+        setEndDate(latestDate);
+        generateReport();
       } catch (error) {
         console.error(error.message);
       }
@@ -23,31 +32,37 @@ const Report = () => {
     getRecords();
   }, []);
 
+  useEffect(() => {
+    if (startDate && endDate) {
+      generateReport();
+    }
+  }, [startDate, endDate]);
+
   const generateReport = () => {
-    // Filter the records based on start date, end date, and type
     const filteredRecords = records.filter((record) => {
-      // Convert date strings to Date objects for comparison
+
       const recordDate = new Date(record.date);
       const startDateObj = new Date(startDate);
       const endDateObj = new Date(endDate);
   
-      // Check if the record date is within the selected date range
       const isWithinDateRange =
         recordDate >= startDateObj && recordDate <= endDateObj;
   
-      // Check if the record type matches the selected type or if type is empty
       const isMatchingType = type === "" || record.type === type;
   
       return isWithinDateRange && isMatchingType;
     });
   
-    // Calculate total expenses
     const totalExpenses = filteredRecords.reduce(
       (total, record) => total + parseFloat(record.cost),
       0
     );
+
+    const totalUniqueItems = new Set(filteredRecords.map(record => record.name)).size;
+
+    const averageExpensePerItem = totalUniqueItems > 0 ? totalExpenses / totalUniqueItems : 0;
   
-    // Calculate average cost
+    // Calculate  cost
     const averageCost =
       filteredRecords.length > 0
         ? totalExpenses / filteredRecords.length
@@ -71,15 +86,38 @@ const Report = () => {
       }
       expensesOverTime[yearMonth] += parseFloat(record.cost);
     });
+
+    // Calculate additional statistics
+    const totalRecords = filteredRecords.length;
+    const minExpense = filteredRecords.length > 0 ? Math.min(...filteredRecords.map(record => parseFloat(record.cost))) : 0;
+    const maxExpense = filteredRecords.length > 0 ? Math.max(...filteredRecords.map(record => parseFloat(record.cost))) : 0;
+    const mostExpensiveItem = filteredRecords.reduce((prev, current) => (parseFloat(prev.cost) > parseFloat(current.cost) ? prev : current));
+    const leastExpensiveItem = filteredRecords.reduce((prev, current) => (parseFloat(prev.cost) < parseFloat(current.cost) ? prev : current));
+    
+    const percentageByCategory = {};
+    const averageCostByCategory = {};
+    Object.entries(expensesByCategory).forEach(([category, totalCost]) => {
+      percentageByCategory[category] = (totalCost / totalExpenses) * 100;
+      averageCostByCategory[category] = totalCost / (filteredRecords.filter(record => record.type === category).length || 1);
+    });
   
     // Construct the report
     const report = {
       totalExpenses,
+      totalUniqueItems,
+      averageExpensePerItem,
       averageCost,
       expensesByCategory,
       expensesOverTime,
+      totalRecords,
+      minExpense,
+      maxExpense,
+      mostExpensiveItem,
+      leastExpensiveItem,
+      percentageByCategory,
+      averageCostByCategory,
     };
-  
+    console.log(report);
     setReport(report);
   };  
 
@@ -125,53 +163,101 @@ const Report = () => {
           onClick={generateReport}
           className="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors focus:outline-none"
         >
-          Generate Report
+          Submit :)
         </button>
       </div>
       {/* Display the generated report here */}
+      {/* Display the generated report here */}
       {report && (
-      <div>
-        {/* Total expenses and average cost */}
-        <h2>Total Expenses: ${report.totalExpenses.toFixed(2)}</h2>
-        <h2>Average Cost: ${report.averageCost.toFixed(2)}</h2>
+        <div>
+          {/* Total expenses and average cost */}
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-2">Total Expenses</h2>
+            <p className="text-2xl font-bold text-purple-600">${report.totalExpenses.toFixed(2)}</p>
+          </div>
+          <div className="mb-8">
+            <h2 className="text-xl font-semibold mb-2">Average Cost</h2>
+            <p className="text-2xl font-bold text-purple-600">${report.averageCost.toFixed(2)}</p>
+          </div>
 
-        {/* Expenses by category */}
-        <h2>Expenses by Category:</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Total Cost</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(report.expensesByCategory).map(([category, total]) => (
-              <tr key={category}>
-                <td>{category}</td>
-                <td>${total.toFixed(2)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          {/* Other statistics in nicely formatted tables */}
+          <div className="grid grid-cols-2 gap-8 mb-8">
+            {/* Minimum and Maximum Expenses */}
+            <div className="rounded-lg border border-purple-600 p-4 shadow-lg">
+              <h2 className="text-xl font-semibold mb-2">Minimum and Maximum Expenses</h2>
+              <table className="w-full border-purple-600">
+                <tbody>
+                  <tr>
+                    <td className="font-semibold border-b border-purple-600">Min Expense: </td>
+                    <td className="text-purple-600 border-b border-purple-600">${report.minExpense.toFixed(2)}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-semibold text-purple-600">Max Expense: </td>
+                    <td className="text-purple-600">${report.maxExpense.toFixed(2)}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-        {/* Expenses over time */}
-        <h2>Expenses Over Time:</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Year-Month</th>
-              <th>Total Cost</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Object.entries(report.expensesOverTime).map(([yearMonth, total]) => (
-              <tr key={yearMonth}>
-                <td>{yearMonth}</td>
-                <td>${total.toFixed(2)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            <div className="rounded-lg border border-purple-600 p-4 shadow-lg">
+              <h2 className="text-xl font-semibold mb-2">Most and Least Expensive Items</h2>
+              <table className="w-full border-purple-600">
+                <tbody>
+                  <tr>
+                    <td className="font-semibold border-b border-purple-600">Most Expensive: </td>
+                    <td className="text-purple-600 border-b border-purple-600">{report.mostExpensiveItem.name}</td>
+                  </tr>
+                  <tr>
+                    <td className="font-semibold text-purple-600">Least Expensive: </td>
+                    <td className="text-purple-600">{report.leastExpensiveItem.name}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Percentage by Category and Average Cost by Category */}
+          <div className="mb-8 grid grid-cols-2 gap-8">
+            <div className="rounded-lg border border-purple-600 p-4 shadow-lg">
+              <h2 className="text-xl font-semibold mb-2">Percentage by Category</h2>
+              <ul>
+                {Object.entries(report.percentageByCategory).map(([category, percentage]) => (
+                  <li key={category} className="text-purple-600">{category}: {percentage.toFixed(2)}%</li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="rounded-lg border border-purple-600 p-4 shadow-lg">
+              <h2 className="text-xl font-semibold mb-2">Average Cost by Category</h2>
+              <table className="w-full border-purple-600">
+                <tbody>
+                  {Object.entries(report.averageCostByCategory).map(([category, averageCost]) => (
+                    <tr key={category}>
+                      <td className="font-semibold border-b border-purple-600">{category}</td>
+                      <td className="text-purple-600 border-b border-purple-600">${averageCost.toFixed(2)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Additional statistics */}
+          <div className="mb-8 rounded-lg border border-purple-600 p-4 shadow-lg">
+            <h2 className="text-xl font-semibold mb-2">Additional Statistics</h2>
+            <table className="w-full border-purple-600">
+              <tbody>
+                <tr>
+                  <td className="font-semibold">Total Unique Items </td>
+                  <td className="font-semibold">Average Expense per Item </td>
+                </tr>
+                <tr>
+                  <td className="text-purple-600">{report.totalUniqueItems}</td>
+                  <td className="text-purple-600">${report.averageExpensePerItem.toFixed(2)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>
