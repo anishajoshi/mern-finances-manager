@@ -1,3 +1,18 @@
+/*
+  This component manages the form for adding or updating expense records.
+
+  Features:
+  - Retrieves existing record data if editing an existing record.
+  - Validates form input to ensure required fields are not empty and cost is non-negative.
+  - Sanitizes form input by removing leading and trailing whitespace from input fields.
+
+  Input Sanitization:
+  - The sanitizeFormInput() function removes leading and trailing whitespace from form input,
+    ensuring data consistency and preventing unintended spaces.
+  - The validateForm() function checks if required fields are not empty and if the cost is a non-negative number.
+    Error messages are displayed to the user for any validation failures.
+*/
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 

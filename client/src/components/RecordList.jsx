@@ -1,5 +1,19 @@
+/*
+  This displays a list of expense records and provides filtering options.
+
+  - Retrieves expense records from a backend API and displays them in a table.
+  - Allows users to filter records by type, amount range, and date range.
+  - It checks if the inputs are not empty and if they are valid numbers before applying the filter.
+
+  Input Sanitization:
+  - The applyFilters function validates minAmount and maxAmount inputs to ensure they are not empty and contain valid numbers.
+    Records are filtered based on these validated inputs to prevent unexpected behavior.
+  - The calendar input (type="date") automatically sanitizes the date input.
+*/
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 
 const Record = (props) => (
   <tr className="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted">
@@ -65,9 +79,20 @@ export default function RecordList() {
       setFilteredRecords(records);
     }
     getRecords();
-  }, []);
+    return;
+  }, [records.length]);
 
-  function applyFilters() {
+  // This method will delete a record
+  async function deleteRecord(id) {
+    await fetch(`http://localhost:5050/record/${id}`, {
+      method: "DELETE",
+    });
+    const newRecords = records.filter((el) => el._id !== id);
+    setRecords(newRecords);
+  }
+
+
+  function applyFilters() { //this is the code for all the filtering that i have implemented
     let filtered = records;
 
     if (filterType) {
@@ -76,7 +101,7 @@ export default function RecordList() {
 
     /* 
     Integrated input sanitizations for minAmount and maxAmount inputs in the applyFilters function. 
-    It checks if the inputs are not empty and if they are valid numbers before applying the filter.
+    It checks if the inputs are not empty and if they are valid numbers before applying the filter. 
     By using a calendar input directly, it automatically also sanitizes input.  
     */
 
@@ -112,8 +137,9 @@ export default function RecordList() {
     setFilteredRecords(records);
   }
 
-  function recordList() {
 
+  // This method will map out the records on the table
+  function recordList() {
     return filteredRecords.map((record) => {
       return (
         <Record

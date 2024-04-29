@@ -1,3 +1,3 @@
-# Finance Manager using MERN
-Learning the MERN stack by building a simple Finance Manager.
-Hoping to integrate more features in the future
+Hello! I've made a Finace Tracker app! 
+
+Hope you liked the project ! 

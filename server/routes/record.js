@@ -1,3 +1,10 @@
+/*
+  - GET requests to fetch all records or a specific record by ID
+  - POST requests to create a new finance record
+  - PATCH requests to update an existing finance record by ID
+  - DELETE requests to delete a finance record by ID
+*/
+
 import express from "express";
 import db from "../db/connection.js";
 import { ObjectId } from "mongodb";

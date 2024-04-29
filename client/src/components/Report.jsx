@@ -1,3 +1,14 @@
+/*
+  This  component generates a financial report based on user-selected criteria.
+
+  - Fetches expense records from a backend API and calculates various statistics.
+  - Allows users to filter records by start date, end date, and expense type.
+  - Calculates total expenses, average cost, minimum and maximum expenses, most and least expensive items,
+    percentage of expenses by category, and average cost by category.
+
+    This is the code for all the report. 
+*/
+
 import { useEffect, useState } from "react";
 
 const Report = () => {

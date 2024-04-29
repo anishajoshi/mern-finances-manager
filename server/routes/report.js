@@ -1,3 +1,18 @@
+/*
+  - POST '/' : Generates a financial report based on criteria provided in the request body. 
+               Criteria may include startDate, endDate, and type of financial records.
+
+  Example request body:
+  {
+    "startDate": "2024-01-01",
+    "endDate": "2024-04-30",
+    "type": "expense"
+  }
+
+  The generated report includes financial records that match the specified criteria, along with any relevant statistics.
+  You can customize the statistics calculation based on your specific requirements.
+*/
+
 // server/routes/report.js
 
 import express from "express";
